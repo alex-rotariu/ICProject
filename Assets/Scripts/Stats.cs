@@ -9,7 +9,7 @@ public class Stats : MonoBehaviour
     [SerializeField] TextMeshProUGUI moneyPerSecondText;
 
     private int money = 0;
-    private int moneyPerSecond = 1;
+    private int moneyPerSecond = 0;
 
     private float timePassedSinceLastSecondUpdate = 0.0f;
 
@@ -39,5 +39,23 @@ public class Stats : MonoBehaviour
 
     public void addMoney() {
         money++;
+    }
+
+
+
+    public void buyUpgrade(string costAndMPSIncrease)
+    {
+        int cost, moneyPerSecondIncrease;
+        cost = int.Parse(costAndMPSIncrease.Substring(0, 10));
+        moneyPerSecondIncrease = int.Parse(costAndMPSIncrease.Substring(13, 10));
+        if(costAndMPSIncrease[11]!='0')
+        {
+            moneyPerSecondIncrease *= -1;
+        }
+        if (money>=cost&&moneyPerSecond+moneyPerSecondIncrease>=0)
+        {
+            money -= cost;
+            moneyPerSecond += moneyPerSecondIncrease;
+        }
     }
 }
