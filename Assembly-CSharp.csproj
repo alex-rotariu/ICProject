@@ -67,8 +67,12 @@
     <Compile Include="Assets\Scripts\Core\ScenesData.cs" />
     <Compile Include="Assets\Scripts\Core\Stats.cs" />
     <Compile Include="Assets\Scripts\Menus\MenuSliderControl.cs" />
+    <Compile Include="Assets\Scripts\Menus\OptionsController.cs" />
+    <Compile Include="Assets\Scripts\Menus\PlayerPrefsController.cs" />
     <Compile Include="Assets\Scripts\Menus\SwipeMenu.cs" />
+    <Compile Include="Assets\Scripts\Menus\UpgradesController.cs" />
     <Compile Include="Assets\Scripts\Menus\VolumeController.cs" />
+    <Compile Include="Assets\Scripts\MusicPlayer.cs" />
     <Compile Include="Assets\Scripts\PoliticianButton.cs" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader" />
