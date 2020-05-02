@@ -7,6 +7,21 @@ public class SceneLoader : MonoBehaviour
 {
     public void loadGameScene() {
         ScenesData.SetPolitician(FindObjectOfType<SwipeMenu>().getSelection()); // setting the chosen politician from game menu to the game scene
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene("Game");
+    }
+
+    public void loadRegisterScene()
+    {
+        SceneManager.LoadScene("Register");
+    }
+
+    public void loadLogInScene()
+    {
+        SceneManager.LoadScene("Login");
+    }
+
+    public void loadSelectionScene()
+    {
+        SceneManager.LoadScene("StartMenu");
     }
 }
