@@ -5,6 +5,11 @@ using UnityEngine.UI;
 using Firebase.Auth;
 using UnityEngine.SceneManagement;
 using System.Security.Cryptography;
+using Models;
+using System.ComponentModel;
+using Proyecto26;
+using System.Resources;
+using System;
 
 public class AuthController : MonoBehaviour
 {
@@ -34,11 +39,26 @@ public class AuthController : MonoBehaviour
                 if (task.IsCompleted)
                 {
                     errorText.text = "Logged In";
-                    GetComponent<SceneLoader>().loadSelectionScene();
+
+                    FirebaseUser user = FirebaseAuth.DefaultInstance.CurrentUser;                
+                    Player player = new Player();
+                    RestClient.Get<Player>(url: "https://icorrupt.firebaseio.com/users/" + user.UserId + ".json").Then(response =>
+                    {
+                        player = response;
+                        ScenesData.SetPlayer(player);
+                        NextScene(player);
+                    });
                 }
             });
     }
     
+    private void NextScene(Player player)
+    {
+        if (player.character == -1)
+            GetComponent<SceneLoader>().loadSelectionScene();
+        else
+            GetComponent<SceneLoader>().loadGameSceneLoggedIn();
+    }
 
     public void RegisterUser()
     {
@@ -61,6 +81,13 @@ public class AuthController : MonoBehaviour
             errorText.text = "Password too long";
             return;
         }
+        GameObject username = GameObject.Find("Username Input");
+        Text usernameText = username.GetComponent<Text>();
+
+        if (usernameText.text.Equals(""))
+        {
+            errorText.text = "Please enter a username";
+        }
 
         FirebaseAuth.DefaultInstance.CreateUserWithEmailAndPasswordAsync(emailInput.text, passwordInput.text).ContinueWith(
             task => {
@@ -80,13 +107,25 @@ public class AuthController : MonoBehaviour
 
                 if (task.IsCompleted)
                 {
-                    emailInput.text = "";
-                    passwordInput.text = "";
+                    if (usernameText != null)
+                    {
+                        FirebaseUser user = FirebaseAuth.DefaultInstance.CurrentUser;
+                        UserProfile profile = new UserProfile();
+                        profile.DisplayName = usernameText.text;
+                        user.UpdateUserProfileAsync(profile);
+                        Player player = new Player();
+                        player.username = usernameText.text;
+                        player.money = 0;
+                        player.character = -1;
+                        player.moneyPerSecond = 0;
+                        RestClient.Put(url: "https://icorrupt.firebaseio.com/users/" + user.UserId + ".json", player);
+                    }
                     errorText.text = "Registration complete";
                     
                 }
             });
     }
+
 
     public void Logout()
     {

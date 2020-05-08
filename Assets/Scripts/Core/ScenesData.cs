@@ -2,14 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// STATIC => PRESENT IN ALL SCENES
 public static class ScenesData
-{
-    private static Sprite chosenPolitician;
-    public static void SetPolitician(Sprite politician) {
-        chosenPolitician = politician;
+{   
+    private static Player playerStats;
+
+    public static void SetCharacter(int index)
+    {
+        playerStats.character = index;
     }
-    
-    public static Sprite GetPolitician() {
-        return chosenPolitician;
+
+    public static void SetPlayer(Player player)
+    {
+        playerStats = player;
     }
+
+    public static Player GetPlayer()
+    {
+        return playerStats;
+    }
+
 }
