@@ -30,4 +30,9 @@ public class SceneLoader : MonoBehaviour
     {
         SceneManager.LoadScene("StartMenu");
     }
+
+    public void loadLeaderboard()
+    {
+        SceneManager.LoadScene("LeaderBoard");
+    }
 }

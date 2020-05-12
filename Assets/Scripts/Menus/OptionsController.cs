@@ -4,22 +4,46 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class OptionsController : MonoBehaviour {
-    [SerializeField] Slider volumeSlider;
-    [SerializeField] float defaultVolume = 0.8f;
+    Slider volumeSlider;
+    float defaultVolume = 0.8f;
     private int currentTrack;
     private MusicPlayer musicPlayer;
+    private bool isPlaying = false;
+    private static OptionsController Instance;
+
+    private void Awake()
+    {
+        if(Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     // Start is called before the first frame update
     void Start() {
+        
+        if (isPlaying == false)
+        {
+            volumeSlider = FindObjectOfType<Slider>();
+            if(volumeSlider)
+                
+            currentTrack = PlayerPrefsController.GetMasterTrack();
+            musicPlayer = FindObjectOfType<MusicPlayer>();
+            musicPlayer.PlaySong(currentTrack);
+            isPlaying = true;
+        }
         volumeSlider.value = PlayerPrefsController.GetMasterVolume();
-        currentTrack = PlayerPrefsController.GetMasterTrack();
-        musicPlayer = FindObjectOfType<MusicPlayer>();
-        musicPlayer.PlaySong(currentTrack);
     }
+           
 
     // Update is called once per frame
     void Update() {    
-        if (musicPlayer) {
+        if (musicPlayer && volumeSlider) {
             musicPlayer.SetVolume(volumeSlider.value);   
         }
     }

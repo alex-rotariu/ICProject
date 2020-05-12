@@ -131,6 +131,10 @@ public class AuthController : MonoBehaviour
     {
         if (FirebaseAuth.DefaultInstance.CurrentUser != null)
         {
+            GameObject player = FindObjectOfType<MusicPlayer>().gameObject;
+            GameObject options = FindObjectOfType<OptionsController>().gameObject;
+            Destroy(player);
+            Destroy(options);
             FirebaseAuth.DefaultInstance.SignOut();
             Destroy(GameObject.Find("Music Player"));
             GetComponent<SceneLoader>().loadLogInScene();
