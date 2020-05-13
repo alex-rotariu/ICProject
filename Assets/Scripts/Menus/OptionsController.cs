@@ -10,16 +10,21 @@ public class OptionsController : MonoBehaviour {
     private MusicPlayer musicPlayer;
     private bool isPlaying = false;
     private static OptionsController Instance;
+    private float prevVolValue;
 
     private void Awake()
     {
-        if(Instance == null)
+        
+        if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(this.gameObject);
         }
         else
         {
+            Instance.volumeSlider = FindObjectOfType<Slider>();
+            if(Instance.volumeSlider)
+                Instance.volumeSlider.value = PlayerPrefsController.GetMasterVolume();
             Destroy(gameObject);
         }
     }
@@ -30,37 +35,37 @@ public class OptionsController : MonoBehaviour {
         if (isPlaying == false)
         {
             volumeSlider = FindObjectOfType<Slider>();
-            if(volumeSlider)
-                
             currentTrack = PlayerPrefsController.GetMasterTrack();
             musicPlayer = FindObjectOfType<MusicPlayer>();
             musicPlayer.PlaySong(currentTrack);
+            prevVolValue = PlayerPrefsController.GetMasterVolume();
+            musicPlayer.SetVolume(prevVolValue);
             isPlaying = true;
         }
-        volumeSlider.value = PlayerPrefsController.GetMasterVolume();
+        volumeSlider.value = prevVolValue;
     }
            
 
     // Update is called once per frame
-    void Update() {    
+    void Update() {
+        
         if (musicPlayer && volumeSlider) {
-            musicPlayer.SetVolume(volumeSlider.value);   
+            
+            if(volumeSlider.value != prevVolValue)
+            {
+                musicPlayer.SetVolume(volumeSlider.value);
+                prevVolValue = volumeSlider.value;
+                PlayerPrefsController.SetMasterVolume(prevVolValue);
+            }
+                
         }
     }
 
-    public void SaveAndExit() {
-        PlayerPrefsController.SetMasterVolume(volumeSlider.value);
-        PlayerPrefsController.SetMasterTrack(currentTrack);
-    }
-
     public void SkipSong() {
+        PlayerPrefsController.SetMasterTrack(currentTrack);
         if (!musicPlayer.PlaySong(currentTrack+1))
             currentTrack++;
         else
             currentTrack = 0;
-    }
-
-    public void SetDefaults() {
-        volumeSlider.value = defaultVolume;
     }
 }

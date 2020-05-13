@@ -57,6 +57,7 @@ public class MusicPlayer : MonoBehaviour {
         if(currentSource != null) {
             AudioClip audioClip = Resources.Load(songPath + trackNames[songIndex]) as AudioClip;
             currentSource.clip = audioClip;
+            currentSource.loop = true;
             currentSource.Play();
         }
             

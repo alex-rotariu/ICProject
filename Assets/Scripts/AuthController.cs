@@ -10,11 +10,20 @@ using System.ComponentModel;
 using Proyecto26;
 using System.Resources;
 using System;
+using UnityEditor;
+
 
 public class AuthController : MonoBehaviour
 {
+    private DatabaseHandler databaseHandler;
     [SerializeField] Text emailInput, passwordInput;
     [SerializeField] Text errorText;
+
+
+    private void Start()
+    {
+        databaseHandler = GetComponent<DatabaseHandler>();
+    }
 
     public void Login()
     {
@@ -118,7 +127,10 @@ public class AuthController : MonoBehaviour
                         player.money = 0;
                         player.character = -1;
                         player.moneyPerSecond = 0;
+                       
                         RestClient.Put(url: "https://icorrupt.firebaseio.com/users/" + user.UserId + ".json", player);
+
+                        databaseHandler.AddScore(player.username, player.money);
                     }
                     errorText.text = "Registration complete";
                     

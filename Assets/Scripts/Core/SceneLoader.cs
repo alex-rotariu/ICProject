@@ -35,4 +35,9 @@ public class SceneLoader : MonoBehaviour
     {
         SceneManager.LoadScene("LeaderBoard");
     }
+
+    public string GetActiveScene()
+    {
+        return SceneManager.GetActiveScene().name;
+    }
 }
