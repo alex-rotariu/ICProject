@@ -9,13 +9,13 @@ public class Upgrade
 {
     private int id;
     private string name;
-    private double price;
+    private ulong price;
     private int type;   // 0 is MPS; 1 is MPC
-    private double value;
+    private ulong value;
     private int status;
     private string politician;
 
-    public Upgrade(int id, string name, double price, int type, double value, int status, string politician)
+    public Upgrade(int id, string name, ulong price, int type, ulong value, int status, string politician)
     {
         this.id = id;
         this.name = name;
@@ -36,7 +36,7 @@ public class Upgrade
         return this.name;
     }
 
-    public double getPrice()
+    public ulong getPrice()
     {
         return this.price;
     }
@@ -46,7 +46,7 @@ public class Upgrade
         return this.type;
     }
 
-    public double getValue()
+    public ulong getValue()
     {
         return this.value;
     }
@@ -115,7 +115,7 @@ public class UpgradesController : MonoBehaviour
         for(int i=1;i<Upgrades.Count;i++)
         {
             string[] row = Upgrades[i].Split(new char[] { ',' });
-            Upgrade u = new Upgrade(int.Parse(row[0]),row[1],double.Parse(row[2]),int.Parse(row[3]), double.Parse(row[4]),int.Parse(row[5]),row[6]);
+            Upgrade u = new Upgrade(int.Parse(row[0]),row[1], ulong.Parse(row[2]),int.Parse(row[3]), ulong.Parse(row[4]),int.Parse(row[5]),row[6]);
             if (u.getStatus() == 0 && (u.getPolitician() == ScenesData.GetPolitician().name || u.getPolitician() == "All"))
             {
                 UpgradesList.Add(u);

@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System.IO;
+using System;
 
 public class Stats : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI moneyText;
     [SerializeField] TextMeshProUGUI moneyPerSecondText;
 
-    private double money = 0.0f;
-    private double moneyPerSecond = 0.0f;
-    private double moneyPerClick = 1.0f;
+    private ulong money = 0;
+    private ulong moneyPerSecond = 0;
+    private ulong moneyPerClick = 1;
 
     private float timePassedSinceLastSecondUpdate = 0.0f;
 
@@ -32,7 +33,6 @@ public class Stats : MonoBehaviour
             timePassedSinceLastSecondUpdate = 0.0f;
 
             money += moneyPerSecond;
-            money = System.Math.Round(money,2);
         }
 
 
@@ -42,6 +42,7 @@ public class Stats : MonoBehaviour
 
     public void loadSaveData()
     {
+        DateTime SaveTime = new DateTime();
         List<string> SaveData = new List<string>();
         using (StreamReader sr = new StreamReader("Assets/Resources/SaveData.csv"))
         {
@@ -51,9 +52,13 @@ public class Stats : MonoBehaviour
             }
         }
         string[] row = SaveData[1].Split(new char[] { ',' });
-        money = double.Parse(row[0]);
-        moneyPerClick = double.Parse(row[1]);
-        moneyPerSecond = double.Parse(row[2]);
+        money = ulong.Parse(row[0]);
+        moneyPerClick = ulong.Parse(row[1]);
+        moneyPerSecond = ulong.Parse(row[2]);
+        SaveTime = DateTime.Parse(row[3]);
+        int PassedTime = (int)(System.DateTime.UtcNow - SaveTime).TotalSeconds;
+        addMoney((ulong)PassedTime * moneyPerSecond);
+
     }
     public void writeSaveData()
     {
@@ -67,20 +72,20 @@ public class Stats : MonoBehaviour
         }
         StreamWriter writer = new StreamWriter("Assets/Resources/SaveData.csv", false);
         writer.WriteLine(SaveData[0]);
-        SaveData[1] = money.ToString() + ',' + moneyPerClick.ToString() + ',' + moneyPerSecond.ToString();
+        SaveData[1] = money.ToString() + ',' + moneyPerClick.ToString() + ',' + moneyPerSecond.ToString() + ',' + System.DateTime.UtcNow.ToString();
         writer.WriteLine(SaveData[1]);
         writer.Close();
     }
 
-    public double getMoney()
+    public ulong getMoney()
     {
         return money;
     }
-    public double getMoneyPerSecond()
+    public ulong getMoneyPerSecond()
     {
         return moneyPerSecond;
     }
-    public double getMoneyPerClick()
+    public ulong getMoneyPerClick()
     {
         return moneyPerClick;
     }
@@ -88,55 +93,46 @@ public class Stats : MonoBehaviour
     public void addMoney() 
     {
         money+=moneyPerClick;
-        money = System.Math.Round(money, 2);
         writeSaveData();
     }
-    public void addMoney(double addedMoney)
+    public void addMoney(ulong addedMoney)
     {
         money += addedMoney;
-        money = System.Math.Round(money, 2);
         writeSaveData();
     }
-    public void addMoneyPerSecond(double addedMPS)
+    public void addMoneyPerSecond(ulong addedMPS)
     {
         moneyPerSecond += addedMPS;
-        moneyPerSecond = System.Math.Round(moneyPerSecond, 2);
         writeSaveData();
     }
-    public void addMoneyPerClick(double addedMPC)
+    public void addMoneyPerClick(ulong addedMPC)
     {
         moneyPerClick += addedMPC;
-        moneyPerClick = System.Math.Round(moneyPerClick, 2);
         writeSaveData();
     }
-    public void addPercentMoneyPerSecond(double percentageMPS)
+    public void addPercentMoneyPerSecond(ulong percentageMPS)
     {
         moneyPerSecond *= (100 + percentageMPS) / 100;
-        moneyPerSecond = System.Math.Round(moneyPerSecond, 2);
         writeSaveData();
     }
-    public void addPercentMoneyPerClick(double percentageMPC)
+    public void addPercentMoneyPerClick(ulong percentageMPC)
     {
         moneyPerClick *= (100 + percentageMPC) / 100;
-        moneyPerClick = System.Math.Round(moneyPerClick, 2);
         writeSaveData();
     }
-    public void removeMoney(double removedMoney)
+    public void removeMoney(ulong removedMoney)
     {
         money -= removedMoney;
-        money = System.Math.Round(money, 2);
         writeSaveData();
     }
-    public void removeMoneyPerSecond(double removedMPS)
+    public void removeMoneyPerSecond(ulong removedMPS)
     {
         moneyPerSecond -= removedMPS;
-        moneyPerSecond = System.Math.Round(moneyPerSecond, 2);
         writeSaveData();
     }
-    public void removeMoneyPerClick(double removedMPC)
+    public void removeMoneyPerClick(ulong removedMPC)
     {
         moneyPerClick -=removedMPC;
-        moneyPerClick = System.Math.Round(moneyPerClick, 2);
         writeSaveData();
     }
 }
