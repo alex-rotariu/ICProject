@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System.IO;
 using System;
 
 public class Stats : MonoBehaviour
@@ -11,7 +12,9 @@ public class Stats : MonoBehaviour
     PlayerSession session;
 
     private Player playerStats;
-    private int buttonMoney = 1;
+    private ulong money = 0;
+    private ulong moneyPerSecond = 0;
+    private ulong moneyPerClick = 1;
 
     private float timePassedSinceLastSecondUpdate = 0.0f;
 
@@ -19,6 +22,7 @@ public class Stats : MonoBehaviour
     {
         playerStats = ScenesData.GetPlayer();
         session = FindObjectOfType<PlayerSession>();
+        loadSaveData();
     }
 
     // Update is called once per frame
@@ -46,29 +50,99 @@ public class Stats : MonoBehaviour
 
     }
 
-    public void AddMoneyButton()
+    public void loadSaveData()
     {
-        AddMoney(buttonMoney);
+        DateTime SaveTime = new DateTime();
+        List<string> SaveData = new List<string>();
+        using (StreamReader sr = new StreamReader("Assets/Resources/SaveData.csv"))
+        {
+            while (sr.Peek() >= 0)
+            {
+                SaveData.Add(sr.ReadLine());
+            }
+        }
+        string[] row = SaveData[1].Split(new char[] { ',' });
+        money = ulong.Parse(row[0]);
+        moneyPerClick = ulong.Parse(row[1]);
+        moneyPerSecond = ulong.Parse(row[2]);
+        SaveTime = DateTime.Parse(row[3]);
+        int PassedTime = (int)(System.DateTime.UtcNow - SaveTime).TotalSeconds;
+        addMoney((ulong)PassedTime * moneyPerSecond);
+    }
+    
+    public void writeSaveData()
+    {
+        List<string> SaveData = new List<string>();
+        using (StreamReader sr = new StreamReader("Assets/Resources/SaveData.csv"))
+        {
+            while (sr.Peek() >= 0)
+            {
+                SaveData.Add(sr.ReadLine());
+            }
+        }
+        StreamWriter writer = new StreamWriter("Assets/Resources/SaveData.csv", false);
+        writer.WriteLine(SaveData[0]);
+        SaveData[1] = money.ToString() + ',' + moneyPerClick.ToString() + ',' + moneyPerSecond.ToString() + ',' + System.DateTime.UtcNow.ToString();
+        writer.WriteLine(SaveData[1]);
+        writer.Close();
     }
 
-    public void AddMoney(int amount) {
-        playerStats.money += amount;
-        
+    public ulong getMoney()
+    {
+        return money;
+    }
+    public ulong getMoneyPerSecond()
+    {
+        return moneyPerSecond;
+    }
+    public ulong getMoneyPerClick()
+    {
+        return moneyPerClick;
     }
 
-    public void BuyUpgrade(string costAndMPSIncrease)
+    public void addMoney() 
     {
-        int cost, moneyPerSecondIncrease;
-        cost = int.Parse(costAndMPSIncrease.Substring(0, 10));
-        moneyPerSecondIncrease = int.Parse(costAndMPSIncrease.Substring(13, 10));
-        if(costAndMPSIncrease[11]!='0')
-        {
-            moneyPerSecondIncrease *= -1;
-        }
-        if (playerStats.money >= cost&&playerStats.moneyPerSecond+moneyPerSecondIncrease>=0)
-        {
-            playerStats.money -= cost;
-            playerStats.moneyPerSecond += moneyPerSecondIncrease;
-        }
+        money+=moneyPerClick;
+        writeSaveData();
+    }
+    public void addMoney(ulong addedMoney)
+    {
+        money += addedMoney;
+        writeSaveData();
+    }
+    public void addMoneyPerSecond(ulong addedMPS)
+    {
+        moneyPerSecond += addedMPS;
+        writeSaveData();
+    }
+    public void addMoneyPerClick(ulong addedMPC)
+    {
+        moneyPerClick += addedMPC;
+        writeSaveData();
+    }
+    public void addPercentMoneyPerSecond(ulong percentageMPS)
+    {
+        moneyPerSecond *= (100 + percentageMPS) / 100;
+        writeSaveData();
+    }
+    public void addPercentMoneyPerClick(ulong percentageMPC)
+    {
+        moneyPerClick *= (100 + percentageMPC) / 100;
+        writeSaveData();
+    }
+    public void removeMoney(ulong removedMoney)
+    {
+        money -= removedMoney;
+        writeSaveData();
+    }
+    public void removeMoneyPerSecond(ulong removedMPS)
+    {
+        moneyPerSecond -= removedMPS;
+        writeSaveData();
+    }
+    public void removeMoneyPerClick(ulong removedMPC)
+    {
+        moneyPerClick -=removedMPC;
+        writeSaveData();
     }
 }
