@@ -36,7 +36,7 @@ public class DatabaseHandler : MonoBehaviour
     private const int MaxScores = 10;
     public TextMeshProUGUI displayScores;
     private new string name = "";
-    private int score = 100;
+    private uint score = 100;
 
     // When the app starts, check to make sure that we have
     // the required dependencies to use Firebase, and if not,
@@ -178,7 +178,7 @@ public class DatabaseHandler : MonoBehaviour
         return TransactionResult.Success(mutableData);
     }
 
-    public void AddScore(string username, int money)
+    public void AddScore(string username, uint money)
     {
         name = username;
         score = money;

@@ -7,7 +7,7 @@ using UnityEngine;
 public struct Player
 {
     public string username;
-    public int money;
-    public int moneyPerSecond;
+    public uint money;
+    public uint moneyPerSecond;
     public int character;
 }

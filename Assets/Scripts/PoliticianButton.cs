@@ -22,7 +22,7 @@ public class PoliticianButton : MonoBehaviour
     }
 
     public void OnClick() {
-        stats.AddMoneyButton();
+        stats.addMoney();
         StartCoroutine(ShrinkButton());
     }
 

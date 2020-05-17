@@ -22,4 +22,9 @@ public static class ScenesData
         return playerStats;
     }
 
+    public static int GetPolitician()
+    {
+        return playerStats.character;
+    }
+
 }

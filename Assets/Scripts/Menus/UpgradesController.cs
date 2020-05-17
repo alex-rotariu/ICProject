@@ -13,9 +13,9 @@ public class Upgrade
     private int type;   // 0 is MPS; 1 is MPC
     private ulong value;
     private int status;
-    private string politician;
+    private int politician;
 
-    public Upgrade(int id, string name, ulong price, int type, ulong value, int status, string politician)
+    public Upgrade(int id, string name, ulong price, int type, ulong value, int status, int politician)
     {
         this.id = id;
         this.name = name;
@@ -55,7 +55,7 @@ public class Upgrade
     {
         return this.status;
     }
-    public string getPolitician()
+    public int getPolitician()
     {
         return this.politician;
     }

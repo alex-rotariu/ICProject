@@ -35,7 +35,7 @@ public class Stats : MonoBehaviour
             //If more than a second passed then reset time passed and add moneyPerSecond to total money
             timePassedSinceLastSecondUpdate = 0.0f;
 
-            AddMoney(playerStats.moneyPerSecond);
+            addMoney(playerStats.moneyPerSecond);
         }
 
         moneyText.text = playerStats.money.ToString();
