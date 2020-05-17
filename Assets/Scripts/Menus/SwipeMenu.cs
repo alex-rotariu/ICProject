@@ -47,7 +47,8 @@ public class SwipeMenu : MonoBehaviour {
 
     }
 
-    public Sprite getSelection() {
-        return transform.GetChild(selection).gameObject.GetComponent<Image>().sprite;
+    public int getSelection() {
+        return selection;
     }
+
 }

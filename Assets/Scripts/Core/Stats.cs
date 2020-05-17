@@ -9,16 +9,19 @@ public class Stats : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI moneyText;
     [SerializeField] TextMeshProUGUI moneyPerSecondText;
+    PlayerSession session;
 
+    private Player playerStats;
     private ulong money = 0;
     private ulong moneyPerSecond = 0;
     private ulong moneyPerClick = 1;
 
     private float timePassedSinceLastSecondUpdate = 0.0f;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
+        playerStats = ScenesData.GetPlayer();
+        session = FindObjectOfType<PlayerSession>();
         loadSaveData();
     }
 
@@ -32,12 +35,19 @@ public class Stats : MonoBehaviour
             //If more than a second passed then reset time passed and add moneyPerSecond to total money
             timePassedSinceLastSecondUpdate = 0.0f;
 
-            money += moneyPerSecond;
+            AddMoney(playerStats.moneyPerSecond);
         }
 
+        moneyText.text = playerStats.money.ToString();
+        moneyPerSecondText.text = playerStats.moneyPerSecond.ToString();
+        UpdateDatabase();
+    }
 
-        moneyText.text = money.ToString();
-        moneyPerSecondText.text = moneyPerSecond.ToString();
+    private void UpdateDatabase()
+    {
+        ScenesData.SetPlayer(playerStats);
+        session.SaveToDatabase();
+
     }
 
     public void loadSaveData()
@@ -58,8 +68,8 @@ public class Stats : MonoBehaviour
         SaveTime = DateTime.Parse(row[3]);
         int PassedTime = (int)(System.DateTime.UtcNow - SaveTime).TotalSeconds;
         addMoney((ulong)PassedTime * moneyPerSecond);
-
     }
+    
     public void writeSaveData()
     {
         List<string> SaveData = new List<string>();

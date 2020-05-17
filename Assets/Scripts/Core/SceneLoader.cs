@@ -5,8 +5,39 @@ using UnityEngine.SceneManagement;
 
 public class SceneLoader : MonoBehaviour
 {
-    public void loadGameScene() {
-        ScenesData.SetPolitician(FindObjectOfType<SwipeMenu>().getSelection()); // setting the chosen politician from game menu to the game scene
-        SceneManager.LoadScene(1);
+    public void loadGameSceneLoggedIn() {
+        SceneManager.LoadScene("Game");
+    }
+
+    public void loadGameScene()
+    {
+        int index = FindObjectOfType<SwipeMenu>().getSelection();
+        ScenesData.SetCharacter(index);
+        loadGameSceneLoggedIn();
+    }
+
+    public void loadRegisterScene()
+    {
+        SceneManager.LoadScene("Register");
+    }
+
+    public void loadLogInScene()
+    {
+        SceneManager.LoadScene("Login");
+    }
+
+    public void loadSelectionScene()
+    {
+        SceneManager.LoadScene("StartMenu");
+    }
+
+    public void loadLeaderboard()
+    {
+        SceneManager.LoadScene("LeaderBoard");
+    }
+
+    public string GetActiveScene()
+    {
+        return SceneManager.GetActiveScene().name;
     }
 }

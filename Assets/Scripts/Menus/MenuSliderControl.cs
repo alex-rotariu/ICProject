@@ -36,6 +36,11 @@ public class MenuSliderControl : MonoBehaviour {
         }     
     }
 
+    public void SkipSong()
+    {
+        FindObjectOfType<OptionsController>().SkipSong();
+    }
+
     public bool IsShowing() {
         return isShowing;
     }
