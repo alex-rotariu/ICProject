@@ -36,7 +36,7 @@ public class DatabaseHandler : MonoBehaviour
     private const int MaxScores = 10;
     public TextMeshProUGUI displayScores;
     private new string name = "";
-    private uint score = 100;
+    private ulong score = 100;
 
     // When the app starts, check to make sure that we have
     // the required dependencies to use Firebase, and if not,
@@ -144,13 +144,13 @@ public class DatabaseHandler : MonoBehaviour
         {
             // If the current list of scores is greater or equal to our maximum allowed number,
             // we see if the new score should be added and remove the lowest existing score.
-            long minScore = long.MaxValue;
+            ulong minScore = ulong.MaxValue;
             object minVal = null;
             foreach (var child in leaders)
             {
                 if (!(child is Dictionary<string, object>))
                     continue;
-                long childScore = (long)((Dictionary<string, object>)child)["score"];
+                ulong childScore = (ulong)((Dictionary<string, object>)child)["score"];
                 if (childScore < minScore)
                 {
                     minScore = childScore;
@@ -178,7 +178,7 @@ public class DatabaseHandler : MonoBehaviour
         return TransactionResult.Success(mutableData);
     }
 
-    public void AddScore(string username, uint money)
+    public void AddScore(string username, ulong money)
     {
         name = username;
         score = money;

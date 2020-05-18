@@ -127,6 +127,7 @@ public class AuthController : MonoBehaviour
                         player.money = 0;
                         player.character = -1;
                         player.moneyPerSecond = 0;
+                        player.moneyPerClick = 1;
                        
                         RestClient.Put(url: "https://icorrupt.firebaseio.com/users/" + user.UserId + ".json", player);
 

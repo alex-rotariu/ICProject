@@ -12,9 +12,6 @@ public class Stats : MonoBehaviour
     PlayerSession session;
 
     private Player playerStats;
-    private ulong money = 0;
-    private ulong moneyPerSecond = 0;
-    private ulong moneyPerClick = 1;
 
     private float timePassedSinceLastSecondUpdate = 0.0f;
 
@@ -61,13 +58,9 @@ public class Stats : MonoBehaviour
                 SaveData.Add(sr.ReadLine());
             }
         }
-        string[] row = SaveData[1].Split(new char[] { ',' });
-        money = ulong.Parse(row[0]);
-        moneyPerClick = ulong.Parse(row[1]);
-        moneyPerSecond = ulong.Parse(row[2]);
-        SaveTime = DateTime.Parse(row[3]);
+        SaveTime = DateTime.Parse(SaveData[1]);
         int PassedTime = (int)(System.DateTime.UtcNow - SaveTime).TotalSeconds;
-        addMoney((ulong)PassedTime * moneyPerSecond);
+        addMoney((ulong)PassedTime * playerStats.moneyPerSecond);
     }
     
     public void writeSaveData()
@@ -82,67 +75,67 @@ public class Stats : MonoBehaviour
         }
         StreamWriter writer = new StreamWriter("Assets/Resources/SaveData.csv", false);
         writer.WriteLine(SaveData[0]);
-        SaveData[1] = money.ToString() + ',' + moneyPerClick.ToString() + ',' + moneyPerSecond.ToString() + ',' + System.DateTime.UtcNow.ToString();
+        SaveData[1] = System.DateTime.UtcNow.ToString();
         writer.WriteLine(SaveData[1]);
         writer.Close();
     }
 
     public ulong getMoney()
     {
-        return money;
+        return playerStats.money;
     }
     public ulong getMoneyPerSecond()
     {
-        return moneyPerSecond;
+        return playerStats.moneyPerSecond;
     }
     public ulong getMoneyPerClick()
     {
-        return moneyPerClick;
+        return playerStats.moneyPerClick;
     }
 
     public void addMoney() 
     {
-        money+=moneyPerClick;
+        playerStats.money += playerStats.moneyPerClick;
         writeSaveData();
     }
     public void addMoney(ulong addedMoney)
     {
-        money += addedMoney;
+        playerStats.money += addedMoney;
         writeSaveData();
     }
     public void addMoneyPerSecond(ulong addedMPS)
     {
-        moneyPerSecond += addedMPS;
+        playerStats.moneyPerSecond += addedMPS;
         writeSaveData();
     }
     public void addMoneyPerClick(ulong addedMPC)
     {
-        moneyPerClick += addedMPC;
+        playerStats.moneyPerClick += addedMPC;
         writeSaveData();
     }
     public void addPercentMoneyPerSecond(ulong percentageMPS)
     {
-        moneyPerSecond *= (100 + percentageMPS) / 100;
+        playerStats.moneyPerSecond *= (100 + percentageMPS) / 100;
         writeSaveData();
     }
     public void addPercentMoneyPerClick(ulong percentageMPC)
     {
-        moneyPerClick *= (100 + percentageMPC) / 100;
+        playerStats.moneyPerClick *= (100 + percentageMPC) / 100;
         writeSaveData();
     }
     public void removeMoney(ulong removedMoney)
     {
-        money -= removedMoney;
+        playerStats.money -= removedMoney;
         writeSaveData();
     }
     public void removeMoneyPerSecond(ulong removedMPS)
     {
-        moneyPerSecond -= removedMPS;
+        playerStats.moneyPerSecond -= removedMPS;
         writeSaveData();
     }
     public void removeMoneyPerClick(ulong removedMPC)
     {
-        moneyPerClick -=removedMPC;
+        playerStats.moneyPerClick -=removedMPC;
         writeSaveData();
     }
 }

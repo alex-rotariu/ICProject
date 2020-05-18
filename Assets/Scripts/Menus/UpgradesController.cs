@@ -115,8 +115,8 @@ public class UpgradesController : MonoBehaviour
         for(int i=1;i<Upgrades.Count;i++)
         {
             string[] row = Upgrades[i].Split(new char[] { ',' });
-            Upgrade u = new Upgrade(int.Parse(row[0]),row[1], ulong.Parse(row[2]),int.Parse(row[3]), ulong.Parse(row[4]),int.Parse(row[5]),row[6]);
-            if (u.getStatus() == 0 && (u.getPolitician() == ScenesData.GetPolitician().name || u.getPolitician() == "All"))
+            Upgrade u = new Upgrade(int.Parse(row[0]),row[1], ulong.Parse(row[2]),int.Parse(row[3]), ulong.Parse(row[4]),int.Parse(row[5]),int.Parse(row[6]));
+            if (u.getStatus() == 0 && (u.getPolitician() == ScenesData.GetPolitician() || u.getPolitician() == 99))
             {
                 UpgradesList.Add(u);
             }

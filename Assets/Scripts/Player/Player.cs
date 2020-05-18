@@ -7,7 +7,8 @@ using UnityEngine;
 public struct Player
 {
     public string username;
-    public uint money;
-    public uint moneyPerSecond;
+    public ulong money;
+    public ulong moneyPerSecond;
+    public ulong moneyPerClick;
     public int character;
 }
