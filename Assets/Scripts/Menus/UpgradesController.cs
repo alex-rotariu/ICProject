@@ -12,17 +12,15 @@ public class Upgrade
     private ulong price;
     private int type;   // 0 is MPS; 1 is MPC
     private ulong value;
-    private int status;
     private int politician;
 
-    public Upgrade(int id, string name, ulong price, int type, ulong value, int status, int politician)
+    public Upgrade(int id, string name, ulong price, int type, ulong value, int politician)
     {
         this.id = id;
         this.name = name;
         this.price = price;
         this.type = type;
         this.value = value;
-        this.status = status;
         this.politician = politician;
     }
 
@@ -49,11 +47,6 @@ public class Upgrade
     public ulong getValue()
     {
         return this.value;
-    }
-
-    public int getStatus()
-    {
-        return this.status;
     }
     public int getPolitician()
     {
@@ -115,20 +108,41 @@ public class UpgradesController : MonoBehaviour
         for(int i=1;i<Upgrades.Count;i++)
         {
             string[] row = Upgrades[i].Split(new char[] { ',' });
-            Upgrade u = new Upgrade(int.Parse(row[0]),row[1], ulong.Parse(row[2]),int.Parse(row[3]), ulong.Parse(row[4]),int.Parse(row[5]),int.Parse(row[6]));
-            if (u.getStatus() == 0 && (u.getPolitician() == ScenesData.GetPolitician() || u.getPolitician() == 99))
+            Upgrade u = new Upgrade(int.Parse(row[0]),row[1], ulong.Parse(row[2]),int.Parse(row[3]), ulong.Parse(row[4]),int.Parse(row[5]));
+            if ((stats.getPlayer().upgradeBought[u.getId()] == false ) && (u.getPolitician() == ScenesData.GetPolitician() || u.getPolitician() == 99))
             {
                 UpgradesList.Add(u);
             }
         }
 
-        upgradeSetText(Upgrade1Name, Upgrade1Effect, Upgrade1Price, 0);
-        upgradeSetText(Upgrade2Name, Upgrade2Effect, Upgrade2Price, 1);
-        upgradeSetText(Upgrade3Name, Upgrade3Effect, Upgrade3Price, 2);
-        upgradeSetText(Upgrade4Name, Upgrade4Effect, Upgrade4Price, 3);
-        upgradeSetText(Upgrade5Name, Upgrade5Effect, Upgrade5Price, 4);
-        upgradeSetText(Upgrade6Name, Upgrade6Effect, Upgrade6Price, 5);
-        upgradeSetText(Upgrade7Name, Upgrade7Effect, Upgrade7Price, 6);
+        if (UpgradesList.Count >= 0)
+        {
+            upgradeSetText(Upgrade1Name, Upgrade1Effect, Upgrade1Price, 0);
+        }
+        if (UpgradesList.Count >= 1)
+        {
+            upgradeSetText(Upgrade2Name, Upgrade2Effect, Upgrade2Price, 1);
+        }
+        if (UpgradesList.Count >= 2)
+        {
+            upgradeSetText(Upgrade3Name, Upgrade3Effect, Upgrade3Price, 2);
+        }
+        if (UpgradesList.Count >= 3)
+        {
+            upgradeSetText(Upgrade4Name, Upgrade4Effect, Upgrade4Price, 3);
+        }
+        if (UpgradesList.Count >= 4)
+        {
+            upgradeSetText(Upgrade5Name, Upgrade5Effect, Upgrade5Price, 4);
+        }
+        if (UpgradesList.Count >= 5)
+        {
+            upgradeSetText(Upgrade6Name, Upgrade6Effect, Upgrade6Price, 5);
+        }
+        if (UpgradesList.Count >= 6)
+        {
+            upgradeSetText(Upgrade7Name, Upgrade7Effect, Upgrade7Price, 6);
+        }
         return Upgrades;
     }
 
@@ -164,9 +178,7 @@ public class UpgradesController : MonoBehaviour
     public void buyUpgrade(int index)
     {
         List<string> Upgrades = UpdateUpgrades();
-
-        StreamWriter writer = new StreamWriter("Assets/Resources/Upgrades.csv", false);
-        writer.WriteLine(Upgrades[0]);
+        Player player = stats.getPlayer();
         for (int i = 1; i < Upgrades.Count; i++)
         {
             string[] row = Upgrades[i].Split(new char[] { ',' });
@@ -176,13 +188,9 @@ public class UpgradesController : MonoBehaviour
                 {
                     if (UpgradesList[index].getType() < 4)
                     {
-                        row[5] = "1";
+                        player.upgradeBought[UpgradesList[index].getId()] = true;
+                        stats.setPlayer(player);
                     }
-                    else
-                    {
-                        row[5] = "0";
-                    }
-                    Upgrades[i] = row[0] + ',' + row[1] + ',' + row[2] + ',' + row[3] + ',' + row[4] + ',' + row[5] + ',' + row[6];
                     stats.removeMoney(UpgradesList[index].getPrice());
                     if (UpgradesList[index].getType() % 4 == 0)
                     {
@@ -202,9 +210,7 @@ public class UpgradesController : MonoBehaviour
                     }
                 }
             }
-            writer.WriteLine(Upgrades[i]);
         }
-        writer.Close();
         UpdateUpgrades();
     }
 }

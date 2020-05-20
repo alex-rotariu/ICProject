@@ -11,4 +11,6 @@ public struct Player
     public ulong moneyPerSecond;
     public ulong moneyPerClick;
     public int character;
+    public bool[] upgradeBought;
+    public string lastSaveTime;
 }

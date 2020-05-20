@@ -42,42 +42,26 @@ public class Stats : MonoBehaviour
 
     private void UpdateDatabase()
     {
+        playerStats.lastSaveTime = System.DateTime.UtcNow.ToString();
         ScenesData.SetPlayer(playerStats);
         session.SaveToDatabase();
+    }
 
+    public Player getPlayer()
+    {
+        return playerStats;
+    }
+
+    public void setPlayer(Player player)
+    {
+        playerStats = player;
     }
 
     public void loadSaveData()
     {
-        DateTime SaveTime = new DateTime();
-        List<string> SaveData = new List<string>();
-        using (StreamReader sr = new StreamReader("Assets/Resources/SaveData.csv"))
-        {
-            while (sr.Peek() >= 0)
-            {
-                SaveData.Add(sr.ReadLine());
-            }
-        }
-        SaveTime = DateTime.Parse(SaveData[1]);
-        int PassedTime = (int)(System.DateTime.UtcNow - SaveTime).TotalSeconds;
+        ulong PassedTime = (ulong)(System.DateTime.UtcNow - DateTime.Parse(playerStats.lastSaveTime)).TotalSeconds;
+        playerStats.lastSaveTime = System.DateTime.UtcNow.ToString();
         addMoney((ulong)PassedTime * playerStats.moneyPerSecond);
-    }
-    
-    public void writeSaveData()
-    {
-        List<string> SaveData = new List<string>();
-        using (StreamReader sr = new StreamReader("Assets/Resources/SaveData.csv"))
-        {
-            while (sr.Peek() >= 0)
-            {
-                SaveData.Add(sr.ReadLine());
-            }
-        }
-        StreamWriter writer = new StreamWriter("Assets/Resources/SaveData.csv", false);
-        writer.WriteLine(SaveData[0]);
-        SaveData[1] = System.DateTime.UtcNow.ToString();
-        writer.WriteLine(SaveData[1]);
-        writer.Close();
     }
 
     public ulong getMoney()
@@ -96,46 +80,37 @@ public class Stats : MonoBehaviour
     public void addMoney() 
     {
         playerStats.money += playerStats.moneyPerClick;
-        writeSaveData();
     }
     public void addMoney(ulong addedMoney)
     {
         playerStats.money += addedMoney;
-        writeSaveData();
     }
     public void addMoneyPerSecond(ulong addedMPS)
     {
         playerStats.moneyPerSecond += addedMPS;
-        writeSaveData();
     }
     public void addMoneyPerClick(ulong addedMPC)
     {
         playerStats.moneyPerClick += addedMPC;
-        writeSaveData();
     }
     public void addPercentMoneyPerSecond(ulong percentageMPS)
     {
         playerStats.moneyPerSecond *= (100 + percentageMPS) / 100;
-        writeSaveData();
     }
     public void addPercentMoneyPerClick(ulong percentageMPC)
     {
         playerStats.moneyPerClick *= (100 + percentageMPC) / 100;
-        writeSaveData();
     }
     public void removeMoney(ulong removedMoney)
     {
         playerStats.money -= removedMoney;
-        writeSaveData();
     }
     public void removeMoneyPerSecond(ulong removedMPS)
     {
         playerStats.moneyPerSecond -= removedMPS;
-        writeSaveData();
     }
     public void removeMoneyPerClick(ulong removedMPC)
     {
         playerStats.moneyPerClick -=removedMPC;
-        writeSaveData();
     }
 }

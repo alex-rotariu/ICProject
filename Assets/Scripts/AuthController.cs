@@ -128,7 +128,9 @@ public class AuthController : MonoBehaviour
                         player.character = -1;
                         player.moneyPerSecond = 0;
                         player.moneyPerClick = 1;
-                       
+                        player.upgradeBought = new bool[50];
+                        player.lastSaveTime = System.DateTime.UtcNow.ToString();
+
                         RestClient.Put(url: "https://icorrupt.firebaseio.com/users/" + user.UserId + ".json", player);
 
                         databaseHandler.AddScore(player.username, player.money);
