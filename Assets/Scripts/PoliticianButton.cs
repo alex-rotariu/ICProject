@@ -28,7 +28,7 @@ public class PoliticianButton : MonoBehaviour
 
     private IEnumerator ShrinkButton() {
         transform.localScale = new Vector2(0.85f, 0.85f);
-        yield return new WaitForSeconds(0.015f);
+        yield return new WaitForSeconds(0.025f);
         transform.localScale = new Vector2(1f, 1f);
     }
 }

@@ -96,8 +96,6 @@ public class DatabaseHandler : MonoBehaviour
                           place--;
                       }
                   }
-                  
-                  Debug.Log(leaderBoard.Count);
                   leaderBoard.Reverse();
                   string text = "";
                   foreach (string item in leaderBoard)
@@ -168,8 +166,8 @@ public class DatabaseHandler : MonoBehaviour
 
         // Now we add the new score as a new entry that contains the email address and score.
         Dictionary<string, object> newScoreMap = new Dictionary<string, object>();
-        newScoreMap["score"] = score;
         newScoreMap["name"] = name;
+        newScoreMap["score"] = (long)score;
         leaders.Add(newScoreMap);
 
         // You must set the Value to indicate data at that location has changed.
@@ -185,7 +183,6 @@ public class DatabaseHandler : MonoBehaviour
 
         if (score < 0 || string.IsNullOrEmpty(name))
         {
-
             return;
         }
 
