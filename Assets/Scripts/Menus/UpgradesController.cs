@@ -94,18 +94,13 @@ public class UpgradesController : MonoBehaviour
         
     }
 
-    public List<string> UpdateUpgrades()
+    public string[] UpdateUpgrades()
     {
-        List<string> Upgrades = new List<string>();
-        using (StreamReader sr = new StreamReader("Assets/Resources/Upgrades.csv"))
-        {
-            while (sr.Peek() >= 0)
-            {
-                Upgrades.Add(sr.ReadLine());
-            }
-        }
+        TextAsset Up = Resources.Load<TextAsset>("Upgrades");
+        string UpData = Up.text.Replace("\r", "");
+        string[] Upgrades = UpData.Split(new char[] { '\n' });
         UpgradesList.Clear();
-        for(int i=1;i<Upgrades.Count;i++)
+        for(int i=1;i<Upgrades.Length-1;i++)
         {
             string[] row = Upgrades[i].Split(new char[] { ',' });
             Upgrade u = new Upgrade(int.Parse(row[0]),row[1], ulong.Parse(row[2]),int.Parse(row[3]), ulong.Parse(row[4]),int.Parse(row[5]));
@@ -177,9 +172,9 @@ public class UpgradesController : MonoBehaviour
 
     public void buyUpgrade(int index)
     {
-        List<string> Upgrades = UpdateUpgrades();
+        string[] Upgrades = UpdateUpgrades();
         Player player = stats.getPlayer();
-        for (int i = 1; i < Upgrades.Count; i++)
+        for (int i = 1; i < Upgrades.Length-1; i++)
         {
             string[] row = Upgrades[i].Split(new char[] { ',' });
             if(UpgradesList[index].getId()==int.Parse(row[0]))
