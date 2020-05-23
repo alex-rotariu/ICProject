@@ -192,4 +192,9 @@ public class AuthController : MonoBehaviour
         }
         errorText.text = msg;
     }
+
+    public void ExitApp()
+    {
+        Application.Quit();
+    }
 }
