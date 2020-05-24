@@ -36,7 +36,7 @@ public class DatabaseHandler : MonoBehaviour
     private const int MaxScores = 10;
     public TextMeshProUGUI displayScores;
     private new string name = "";
-    private ulong score = 100;
+    private long score = 100;
 
     // When the app starts, check to make sure that we have
     // the required dependencies to use Firebase, and if not,
@@ -64,7 +64,7 @@ public class DatabaseHandler : MonoBehaviour
 
     protected void StartListener()
     {
-        Debug.Log("Started");
+        ///Debug.Log("Started");
         FirebaseDatabase.DefaultInstance
           .GetReference("leaders").OrderByChild("score")
           .ValueChanged += (object sender2, ValueChangedEventArgs e2) =>
@@ -122,6 +122,8 @@ public class DatabaseHandler : MonoBehaviour
     // modified data or TransactionResult.Abort() which stops the transaction with no changes.
     TransactionResult AddScoreTransaction(MutableData mutableData)
     {
+        
+
         bool exists = false;
         List<object> leaders = mutableData.Value as List<object>;
         if (leaders == null)
@@ -138,19 +140,21 @@ public class DatabaseHandler : MonoBehaviour
                 break;
             }
         }
+
         if (!exists && mutableData.ChildrenCount >= MaxScores)
         {
             // If the current list of scores is greater or equal to our maximum allowed number,
             // we see if the new score should be added and remove the lowest existing score.
-            ulong minScore = ulong.MaxValue;
+            long minScore = long.MaxValue;
             object minVal = null;
             foreach (var child in leaders)
             {
                 if (!(child is Dictionary<string, object>))
                     continue;
-                ulong childScore = (ulong)((Dictionary<string, object>)child)["score"];
+                long childScore = (long)((Dictionary<string, object>)child)["score"];
                 if (childScore < minScore)
                 {
+                    
                     minScore = childScore;
                     minVal = child;
                 }
@@ -167,9 +171,9 @@ public class DatabaseHandler : MonoBehaviour
         // Now we add the new score as a new entry that contains the email address and score.
         Dictionary<string, object> newScoreMap = new Dictionary<string, object>();
         newScoreMap["name"] = name;
-        newScoreMap["score"] = (long)score;
+        newScoreMap["score"] = score;
         leaders.Add(newScoreMap);
-
+        Debug.Log(leaders);
         // You must set the Value to indicate data at that location has changed.
         mutableData.Value = leaders;
         //return and log success
@@ -179,7 +183,7 @@ public class DatabaseHandler : MonoBehaviour
     public void AddScore(string username, ulong money)
     {
         name = username;
-        score = money;
+        score = (long)money;
 
         if (score < 0 || string.IsNullOrEmpty(name))
         {
